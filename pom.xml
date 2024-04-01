@@ -23,6 +23,7 @@
 	</properties>
 	<modules>
 		<module>explore-with-me</module>
+		<module>main-service</module>
 	</modules>
 
 	<dependencies>
