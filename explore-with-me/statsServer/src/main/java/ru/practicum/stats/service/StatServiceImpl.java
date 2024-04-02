@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class StatServiceImpl implements StatService {
     private final ViewStatsRepository statsRepository;
 
-
     @Override
     public EndpointHitDto createStat(EndpointHitDto endpointHitDto) {
 
@@ -50,12 +49,11 @@ public class StatServiceImpl implements StatService {
                 viewStats = statsRepository.findAllUris(start, end);
 
             } else {
-
                 viewStats = statsRepository.findUris(uris, start, end);
             }
         }
-        return !viewStats.isEmpty() ? viewStats.stream()
-                .map(ViewStatsMapper::mapToViewStatsDto)
-                .collect(Collectors.toList()) : Collections.emptyList();
+        return !viewStats.isEmpty()
+                ? viewStats.stream().map(ViewStatsMapper::mapToViewStatsDto).collect(Collectors.toList())
+                : Collections.emptyList();
     }
 }
