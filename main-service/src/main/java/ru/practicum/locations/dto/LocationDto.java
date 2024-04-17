@@ -1,8 +1,8 @@
 package ru.practicum.locations.dto;
 
-import lombok.*;
-
-import javax.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Builder

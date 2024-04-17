@@ -22,7 +22,19 @@ public class ApiErrorHandler {
     }
 
     @ExceptionHandler()
-    public ResponseEntity<Object> handleNotFoundExc(EventNotFoundException e) {
+    public ResponseEntity<Object> handleNotFoundExc(NotFoundException e) {
+        HttpStatus badRequest = HttpStatus.NOT_FOUND;
+        ApiErrorResponse response = new ApiErrorResponse(
+                badRequest,
+                "The required object was not found.",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response, badRequest);
+    }
+
+    @ExceptionHandler()
+    public ResponseEntity<Object> handleRequestNotFoundExc(RequestNotFoundException e) {
         HttpStatus badRequest = HttpStatus.NOT_FOUND;
         ApiErrorResponse response = new ApiErrorResponse(
                 badRequest,
@@ -44,6 +56,7 @@ public class ApiErrorHandler {
         );
         return new ResponseEntity<>(response, badRequest);
     }
+
     @ExceptionHandler()
     public ResponseEntity<Object> handleForbiddenExc(ForbiddenException e) {
         HttpStatus badRequest = HttpStatus.FORBIDDEN;
@@ -56,16 +69,16 @@ public class ApiErrorHandler {
         return new ResponseEntity<>(response, badRequest);
     }
 
-   /* @ExceptionHandler({ApiErrorResponse.class})
-    public ResponseEntity<Object> handleConflictException(ApiErrorResponse e) {
-        ConflictExc exception = new ConflictExc(
-
-                HttpStatus.CONFLICT,
-                e.getReason(),
+    @ExceptionHandler()
+    public ResponseEntity<Object> handleConflictException(ConflictExc e) {
+        HttpStatus badRequest = HttpStatus.CONFLICT;
+        ApiErrorResponse response = new ApiErrorResponse(
+                badRequest,
+                "Integrity constraint has been violated.",
                 e.getMessage(),
-                e.getTimestamp()
+                LocalDateTime.now()
         );
-        return new ResponseEntity<>(exception, HttpStatus.CONFLICT);
-    }*/
+        return new ResponseEntity<>(response, badRequest);
 
+    }
 }

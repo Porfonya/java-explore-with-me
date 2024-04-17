@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.checker.Checker;
 import ru.practicum.users.dto.UserDto;
 
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
 @RequestMapping("/admin/users")
 public class UserController {
     public final UserServiceImpl userService;
-    public Checker checker;
+
 
     @PostMapping()
     public ResponseEntity<UserDto> addUser(@RequestBody @Validated UserDto userDto) {
@@ -27,19 +26,19 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers(@RequestParam(defaultValue = "0") int from,
-                                     @RequestParam(defaultValue = "10") int size){
-       return userService.getAllUsers(from, size);
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDto> getAllUsers(@RequestParam(required = false) List<Long> ids,
+                                     @RequestParam(defaultValue = "0") int from,
+                                     @RequestParam(defaultValue = "10") int size) {
+        return ids == null ? userService.getAllUsers(from, size) : userService.getSomeUsers(ids, from, size);
     }
 
-    @DeleteMapping({"/{id}"})
+    @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable(value = "id") Long userId) {
-        checker.checkerUser(userId);
-        log.info("Категория удалена");
+    public void deleteUser(@PathVariable Long userId) {
+        log.info("Пользователь удален");
         userService.deleteUser(userId);
     }
-
 
 
 }

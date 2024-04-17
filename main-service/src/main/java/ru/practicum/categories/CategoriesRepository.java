@@ -6,4 +6,5 @@ import ru.practicum.categories.model.Category;
 
 @Repository
 public interface CategoriesRepository extends JpaRepository<Category, Long> {
+    Integer countCategoriesByName(String name);
 }

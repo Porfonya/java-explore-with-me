@@ -7,8 +7,8 @@ import ru.practicum.enums.State;
 import ru.practicum.enums.Status;
 import ru.practicum.events.model.Event;
 import ru.practicum.exception.ConflictExc;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.requests.dto.ParticipationRequestDto;
-import ru.practicum.requests.dto.RequestDto;
 import ru.practicum.users.model.User;
 
 import javax.transaction.Transactional;
@@ -28,38 +28,49 @@ public class RequestServiceImpl implements RequestService {
         User user = checker.checkerAndReturnUser(userId);
         Event event = checker.checkerAndReturnEvent(eventId);
 
-
         if (requestRepository.findByRequesterIdAndEventId(userId, eventId) != null) {
-            throw new ConflictExc("Нельзя добавить повторный запрос");
+            throw new ConflictExc(String.format("Пользователь с id = %d, иммет завку %d ", userId, eventId));
         }
+
         if (event.getInitiator().getId().equals(userId)) {
             throw new ConflictExc("Инициатор события не может добавить запрос на участие в своём событии ");
         }
         if (!event.getState().equals(String.valueOf(State.PUBLISHED))) {
             throw new ConflictExc("Нельзя участвовать в неопубликованном событии");
         }
+        if (event.getParticipantLimit() != 0 &&
+                requestRepository.countByEventIdAndStatus(eventId, Status.CONFIRMED)
+                        >= event.getParticipantLimit()) {
+            throw new ConflictExc("Превышение чила заявок");
+        }
+        Status status = Status.PENDING;
+        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
+            status = Status.CONFIRMED;
+        }
+
         Request request = Request.builder()
                 .created(LocalDateTime.now())
                 .requester(user)
                 .event(event)
-                .status(Status.CONFIRMED)
+                .status(status)
                 .build();
 
         return requestMapper.mapToParticipationRequestDto(requestRepository.save(request));
     }
 
     @Override
-    public List<RequestDto> getAllRequests(Long userId) {
-
-        return requestMapper.mapToListRequestDto(requestRepository.findAllByRequesterId(userId));
+    public List<ParticipationRequestDto> getAllRequests(Long userId) {
+        checker.checkerUser(userId);
+        List<Request> requests = requestRepository.findByRequesterId(userId).orElseThrow(() -> new NotFoundException(userId));
+        return requestMapper.mapToListRequestDto(requests);
     }
 
     @Override
-    public RequestDto updateRequestsCanceled(Long userId, Long requestsId) {
+    public ParticipationRequestDto updateRequestsCanceled(Long userId, Long requestsId) {
         checker.checkerUser(userId);
         checker.checkerRequest(requestsId);
         Request request = requestRepository.findRequestByIdAndRequesterId(requestsId, userId);
-        request.setStatus(Status.REJECTED);
-        return requestMapper.mapToRequestDto(request);
+        request.setStatus(Status.CANCELED);
+        return requestMapper.mapToParticipationRequestDto(request);
     }
 }

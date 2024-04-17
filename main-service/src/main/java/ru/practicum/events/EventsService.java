@@ -1,17 +1,15 @@
 package ru.practicum.events;
 
 import ru.practicum.events.dto.*;
-import ru.practicum.events.model.Event;
 import ru.practicum.requests.dto.ParticipationRequestDto;
 import ru.practicum.users.model.User;
 
-import java.util.Collection;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface EventsService {
     EventFullDto addEvent(Long userId, NewEventDto newEventDto);
 
-    List<EventDto> getAllEvents(int from, int size);
     EventFullDto getEvent(User user, Long eventId);
 
     EventFullDto updateUserEventId(Long userId, Long eventId, UpdateEventUserRequest eventDto);
@@ -20,11 +18,18 @@ public interface EventsService {
 
     EventFullDto updateAdminEventId(Long eventId, UpdateEventAdminRequest event);
 
-    List<EventFullDto> getAllEventFullInformation(Collection<Long> users,
-                                           Collection<String> states, Collection<Long> categories,
-                                           String rangeStart, String rangeEnd, int from, int size);
+    List<EventFullDto> getAllEventInformation(List<Long> users,
+                                              List<String> states, List<Long> categories,
+                                              String rangeStart, String rangeEnd, int from, int size);
 
-    EventFullDto getEventId(Long eventId);
+    EventFullDto getEventId(Long eventId, HttpServletRequest request);
 
-    ParticipationRequestDto getEventParticipants(Long userId, Long eventId);
+    List<ParticipationRequestDto> getEventParticipants(Long userId, Long eventId);
+
+    List<EventShortDto> getAllEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
+                                     String rangeEnd, boolean onlyAvailable, String sort, int from, int size,
+                                     HttpServletRequest request);
+
+    EventRequestStatusUpdateResult updateEventParticipants(Long userId, Long eventId,
+                                                           EventRequestStatusUpdateRequest request);
 }

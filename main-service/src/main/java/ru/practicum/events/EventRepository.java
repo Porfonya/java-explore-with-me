@@ -1,7 +1,7 @@
 package ru.practicum.events;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,37 +9,42 @@ import ru.practicum.events.model.Event;
 import ru.practicum.users.model.User;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
+
+    List<Event> findByIdIn(List<Long> events);
+
+    Integer countEventsByCategoryId(Long catId);
+
     Event findEventByIdAndInitiator(Long eventId, User user);
 
-    Page<Event> findAllByInitiatorId(Long userId, Pageable pageable);
+    Optional<Event> findByIdAndState(Long eventId, String state);
 
-    List<Event> findByInitiatorId(Long userId, Pageable pageable);
+    Page<Event> findByInitiatorId(Long userId, Pageable page);
 
-
-
-    @Query(value = "SELECT e " +
-            "FROM Event e " +
-            "WHERE 1 = 1  " +
-            "AND (:users IS NULL OR e.initiator.id IN :users ) " +
-            "AND(:states IS NULL OR  e.state IN :states) " +
-            "AND (:categories IS NULL OR e.category.id IN :categories) " +
-            "AND (e.eventDate BETWEEN :rangeStart AND :rangeEnd)")
-    List<Event> findEvents(@Param("users") Collection<Long> users,
-                           @Param("states") Collection<String> states,
-                           @Param("categories") Collection<Long> categories,
+    @Query(value = "SELECT * FROM Events e WHERE (:userId is null or e.initiator IN (cast(cast(:userId AS TEXT) AS BIGINT))) "
+            + "and (:states is null or e.state IN (cast(:states AS text))) "
+            + "and (:categories is null or e.category_id IN (cast(cast(:categories AS TEXT) AS BIGINT))) "
+            + "and (cast(:rangeStart AS timestamp) is null or e.event_date >= cast(:rangeStart AS timestamp))"
+            + "and (cast(:rangeEnd AS timestamp) is null or e.event_date < cast(:rangeEnd AS timestamp))",
+            nativeQuery = true)
+    List<Event> findEvents(@Param("userId") List<Long> userId, List<String> states, List<Long> categories,
                            @Param("rangeStart") LocalDateTime rangeStart,
                            @Param("rangeEnd") LocalDateTime rangeEnd, Pageable pageable);
 
-   /* @Query(value = "SELECT new ru.practicum.stats.model.ViewStats( s.app, s.uri, COUNT( DISTINCT s.ip)) " +
-            "FROM EndpointHit s " +
-            "WHERE s.timestamp BETWEEN :start AND :end " +
-            "GROUP BY s.app, s.uri " +
-            "ORDER BY COUNT(DISTINCT s.uri) DESC")
-    List<ViewStats> findAllUrisWithUniqueIp(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);*/
+    @Query(value = "SELECT * FROM Events e WHERE (e.state = 'PUBLISHED') "
+            + "and (:text is null or lower(e.annotation) LIKE lower(concat('%',cast(:text AS text),'%')) "
+            + "or lower(e.description) LIKE lower(concat('%',cast(:text AS text),'%'))) "
+            + "and (:categories is null or e.category_id IN (cast(cast(:categories AS TEXT) AS BIGINT))) "
+            + "and (:paid is null or e.paid = cast(cast(:paid AS text) AS BOOLEAN)) "
+            + "and (e.event_date >= :rangeStart) "
+            + "and (cast(:rangeEnd AS timestamp) is null or e.event_date < cast(:rangeEnd AS timestamp))",
+            nativeQuery = true)
+    List<Event> findPublishedEvents(String text, List<Long> categories, Boolean paid,
+                                    @Param("rangeStart") LocalDateTime rangeStart,
+                                    @Param("rangeEnd") LocalDateTime rangeEnd, Pageable pageable);
 
 
 }

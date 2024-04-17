@@ -13,10 +13,11 @@ public class UserMapper {
     public UserDto mapToUserDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
-                .email(user.getEmail())
                 .name(user.getName())
+                .email(user.getEmail())
                 .build();
     }
+
     public UserShortDto mapToUserShortDto(User user) {
         return UserShortDto.builder()
                 .id(user.getId())
@@ -27,8 +28,8 @@ public class UserMapper {
     public User mapToUser(UserDto userDto) {
         return User.builder()
                 .id(userDto.getId())
-                .email(userDto.getEmail())
                 .name(userDto.getName())
+                .email(userDto.getEmail())
                 .build();
     }
 
@@ -38,14 +39,6 @@ public class UserMapper {
             userDtos.add(mapToUserDto(user));
         }
         return userDtos;
-    }
-
-    public List<User> mapToListUser(Iterable<UserDto> userDtos) {
-        List<User> users = new ArrayList<>();
-        for (UserDto userDto : userDtos) {
-            users.add(mapToUser(userDto));
-        }
-        return users;
     }
 
 

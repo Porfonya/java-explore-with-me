@@ -11,22 +11,9 @@ import java.util.List;
 @Component
 public class CategoriesMapper {
 
-    public Category mapToCategoriesDto(CategoryDto categoryDto) {
-        return Category.builder()
-                .id(categoryDto.getId())
-                .name(categoryDto.getName())
-                .build();
-    }
-
     public CategoryDto mapToCategory(Category category) {
         return CategoryDto.builder()
                 .id(category.getId())
-                .name(category.getName())
-                .build();
-    }
-
-    public NewCategoryDto mapToNewCategoryDto(Category category) {
-        return NewCategoryDto.builder()
                 .name(category.getName())
                 .build();
     }
@@ -45,11 +32,4 @@ public class CategoriesMapper {
         return categoryDtoList;
     }
 
-    public List<Category> mapToListCategories(Iterable<CategoryDto> categories) {
-        List<Category> categoryList = new ArrayList<>();
-        for (CategoryDto category : categories) {
-            categoryList.add(mapToCategoriesDto(category));
-        }
-        return categoryList;
-    }
 }

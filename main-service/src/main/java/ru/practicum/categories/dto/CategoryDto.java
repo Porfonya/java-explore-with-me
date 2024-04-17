@@ -1,8 +1,11 @@
 package ru.practicum.categories.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder

@@ -10,6 +10,8 @@ import javax.validation.constraints.Size;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter
+@Getter
 @Data
 public class NewCategoryDto {
     @Size(min = 1, max = 50, message = "Имя должен иметь от 1 до 50 символов")

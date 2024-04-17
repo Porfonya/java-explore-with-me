@@ -3,6 +3,7 @@ package ru.practicum.locations;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.locations.dto.LocationDto;
+
 @AllArgsConstructor
 @Component
 public class LocationMapper {

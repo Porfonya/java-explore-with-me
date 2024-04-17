@@ -1,6 +1,7 @@
 package ru.practicum.events.dto;
 
 import lombok.*;
+import ru.practicum.enums.StateUserAction;
 import ru.practicum.locations.dto.LocationDto;
 
 import javax.validation.constraints.PositiveOrZero;
@@ -21,10 +22,10 @@ public class UpdateEventUserRequest {
     private LocationDto location;
     private Boolean paid;
     @PositiveOrZero
-    private int participantLimit;
+    private Integer participantLimit;
     private Boolean requestModeration;
 
-    private String stateAction;
+    private StateUserAction stateAction;
     @Size(min = 3, max = 120, message = "Титул должен иметь от 3 до 120 символов")
     private String title;
 }

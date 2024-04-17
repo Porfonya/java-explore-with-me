@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.categories.dto.CategoryDto;
 import ru.practicum.categories.dto.NewCategoryDto;
 
-import javax.validation.Valid;
 import java.util.List;
-
-
 
 @RestController
 @RequiredArgsConstructor
@@ -21,7 +18,6 @@ import java.util.List;
 @RequestMapping()
 public class CategoriesController {
     public final CategoriesServiceImpl categoriesService;
-
 
     @PostMapping("/admin/categories")
     public ResponseEntity<CategoryDto> addCategory(@RequestBody @Validated NewCategoryDto categoryDto) {

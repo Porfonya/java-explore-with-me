@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.checker.Checker;
-import ru.practicum.exception.EventNotFoundException;
 import ru.practicum.requests.dto.ParticipationRequestDto;
-import ru.practicum.requests.dto.RequestDto;
-import ru.practicum.users.UserRepository;
 
 import java.util.List;
 
@@ -25,22 +22,19 @@ public class RequestsController {
 
     @PostMapping({"/users/{userId}/requests"})
     public ResponseEntity<ParticipationRequestDto> addRequest(@PathVariable Long userId,
-                                              @RequestParam Long eventId) {
-        checker.checkerUser(userId);
-        checker.checkerEvent(eventId);
-
+                                                              @RequestParam Long eventId) {
         return new ResponseEntity<>(requestService.addRequest(userId, eventId), HttpStatus.CREATED);
     }
 
     @GetMapping({"/users/{userId}/requests"})
-    public ResponseEntity<List<RequestDto>> getAllRequests(@PathVariable Long userId) {
-        checker.checkerUser(userId);
+    public ResponseEntity<List<ParticipationRequestDto>> getAllRequests(@PathVariable Long userId) {
+
         return new ResponseEntity<>(requestService.getAllRequests(userId), HttpStatus.OK);
 
     }
 
     @PatchMapping("/users/{userId}/requests/{requestsId}/cancel")
-    public ResponseEntity<RequestDto> updateRequest(@PathVariable Long userId, @PathVariable Long requestsId) {
+    public ResponseEntity<ParticipationRequestDto> updateRequest(@PathVariable Long userId, @PathVariable Long requestsId) {
         log.info("Отмена своего запроса на участие в событии");
         return new ResponseEntity<>(requestService.updateRequestsCanceled(userId, requestsId), HttpStatus.OK);
     }

@@ -1,21 +1,22 @@
 package ru.practicum.compilations.Dto;
 
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
-import java.util.Set;
 
-@Setter
-@Getter
-@NoArgsConstructor
+@Data
+@ToString
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class NewCompilationDto {
-    @UniqueElements(message = "events: uniqueItems")
-    private Set<Long> events;
+    private List<Long> events;
     private Boolean pinned = false;
+    @NotNull
+    @NotBlank
     @Size(min = 1, max = 50, message = "Титул должен иметь от 1 до 50 символов")
     private String title;
 

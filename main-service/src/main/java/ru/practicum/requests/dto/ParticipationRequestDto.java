@@ -1,11 +1,11 @@
 package ru.practicum.requests.dto;
 
 import lombok.*;
-import ru.practicum.events.model.Event;
-import ru.practicum.users.model.User;
+
 @Setter
 @Getter
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ParticipationRequestDto {
     private String created;
@@ -14,11 +14,4 @@ public class ParticipationRequestDto {
     private Long requester;
     private String status;
 
-    public ParticipationRequestDto(String created, Long event, Long id, Long requester, String status) {
-        this.created = created;
-        this.event = event;
-        this.id = id;
-        this.requester = requester;
-        this.status = status;
-    }
 }
