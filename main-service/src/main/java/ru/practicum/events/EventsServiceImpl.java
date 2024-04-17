@@ -84,27 +84,29 @@ public class EventsServiceImpl implements EventsService {
     @Override
     public EventFullDto updateAdminEventId(Long eventId, UpdateEventAdminRequest eventAdminRequest) {
         Event existEvent = checker.checkerAndReturnEvent(eventId);
-
-        switch (eventAdminRequest.getStateAction()) {
-            case PUBLISH_EVENT: {
-                if (!existEvent.getState().equals(String.valueOf(State.PENDING))) {
-                    throw new ConflictExc("нельзя опубликовать, статус:" + existEvent.getState());
+        if (eventAdminRequest.getStateAction() != null) {
+            switch (eventAdminRequest.getStateAction()) {
+                case PUBLISH_EVENT: {
+                    if (!existEvent.getState().equals(String.valueOf(State.PENDING))) {
+                        throw new ConflictExc("нельзя опубликовать, статус:" + existEvent.getState());
+                    }
+                    if (existEvent.getPublishedOn() != null && existEvent.getEventDate()
+                            .isAfter(existEvent.getPublishedOn().minusHours(1))) {
+                        throw new ValidationExc("Нельзя опубликовать, дата и время не правильные");
+                    }
+                    existEvent.setPublishedOn(LocalDateTime.now());
+                    existEvent.setState(String.valueOf(State.PUBLISHED));
+                    break;
                 }
-                if (existEvent.getPublishedOn() != null && existEvent.getEventDate()
-                        .isAfter(existEvent.getPublishedOn().minusHours(1))) {
-                    throw new ValidationExc("Нельзя опубликовать, дата и время не правильные");
+                case REJECT_EVENT: {
+                    if (existEvent.getState().equals(String.valueOf(State.PUBLISHED))) {
+                        throw new ConflictExc("Уже опубликовано, отменить нельзя");
+                    } else {
+                        existEvent.setState(String.valueOf(State.CANCELED));
+                    }
+                    break;
                 }
-                existEvent.setPublishedOn(LocalDateTime.now());
-                existEvent.setState(String.valueOf(State.PUBLISHED));
             }
-            case REJECT_EVENT: {
-                if (existEvent.getState().equals(String.valueOf(State.PUBLISHED))) {
-                    throw new ConflictExc("Уже опубликовано, отменить нельзя");
-                } else {
-                    existEvent.setState(String.valueOf(State.CANCELED));
-                }
-            }
-
         }
 
         if (eventAdminRequest.getEventDate() != null
