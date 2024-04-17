@@ -12,7 +12,6 @@ import ru.practicum.categories.model.Category;
 import ru.practicum.checker.Checker;
 import ru.practicum.enums.EventsSort;
 import ru.practicum.enums.State;
-import ru.practicum.enums.StateAdminAction;
 import ru.practicum.enums.Status;
 import ru.practicum.events.dto.*;
 import ru.practicum.events.model.Event;
@@ -86,8 +85,8 @@ public class EventsServiceImpl implements EventsService {
     public EventFullDto updateAdminEventId(Long eventId, UpdateEventAdminRequest eventAdminRequest) {
         Event existEvent = checker.checkerAndReturnEvent(eventId);
 
-        if (eventAdminRequest.getStateAction() != null) {
-            if (eventAdminRequest.getStateAction() == StateAdminAction.PUBLISH_EVENT) {
+        switch (eventAdminRequest.getStateAction()) {
+            case PUBLISH_EVENT: {
                 if (!existEvent.getState().equals(String.valueOf(State.PENDING))) {
                     throw new ConflictExc("нельзя опубликовать, статус:" + existEvent.getState());
                 }
@@ -98,17 +97,19 @@ public class EventsServiceImpl implements EventsService {
                 existEvent.setPublishedOn(LocalDateTime.now());
                 existEvent.setState(String.valueOf(State.PUBLISHED));
             }
-            if (eventAdminRequest.getStateAction() == StateAdminAction.REJECT_EVENT) {
+            case REJECT_EVENT: {
                 if (existEvent.getState().equals(String.valueOf(State.PUBLISHED))) {
                     throw new ConflictExc("Уже опубликовано, отменить нельзя");
                 } else {
                     existEvent.setState(String.valueOf(State.CANCELED));
                 }
             }
+
         }
 
         if (eventAdminRequest.getEventDate() != null
-                && LocalDateTime.parse(eventAdminRequest.getEventDate(), formatter).isBefore(LocalDateTime.now().plusHours(2))) {
+                && LocalDateTime.parse(eventAdminRequest.getEventDate(), formatter)
+                .isBefore(LocalDateTime.now().plusHours(2))) {
             throw new ValidationExc("Дата и время на которые намечено событие введены не правильно");
         }
         if (eventAdminRequest.getTitle() != null) {

@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     public final UserMapper userMapper;
 
     @Override
-    public UserDto addUser(UserDto userDto) {
+    public UserDto add(UserDto userDto) {
 
         if (userRepository.existsUserByEmail(userDto.getEmail())) {
             throw new ConflictExc("Такая почта уже существует");
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getSomeUsers(List<Long> userId, int from, int size) {
+    public List<UserDto> getUsersByIds(List<Long> userId, int from, int size) {
         log.info("Поиск по списку id пользователей");
         Pageable page = PageRequest.of(from / size, size);
         List<User> users = userRepository.findByIdIn(userId, page);

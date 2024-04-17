@@ -22,7 +22,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<UserDto> addUser(@RequestBody @Validated UserDto userDto) {
         log.info("Добавление нового пользователя");
-        return new ResponseEntity<>(userService.addUser(userDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.add(userDto), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -30,7 +30,7 @@ public class UserController {
     public List<UserDto> getAllUsers(@RequestParam(required = false) List<Long> ids,
                                      @RequestParam(defaultValue = "0") int from,
                                      @RequestParam(defaultValue = "10") int size) {
-        return ids == null ? userService.getAllUsers(from, size) : userService.getSomeUsers(ids, from, size);
+        return ids == null ? userService.getAllUsers(from, size) : userService.getUsersByIds(ids, from, size);
     }
 
     @DeleteMapping("/{userId}")
