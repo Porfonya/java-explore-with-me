@@ -14,7 +14,6 @@
     <artifactId>statsServer</artifactId>
 
 
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

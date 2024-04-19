@@ -20,7 +20,6 @@ import java.util.List;
 public class StatsServerController {
     public final StatServiceImpl statService;
 
-
     @PostMapping("/hit")
     public ResponseEntity<EndpointHitDto> createStat(@RequestBody EndpointHitDto endpointHitDto) {
         log.info("Создали новую статистику");
@@ -41,5 +40,4 @@ public class StatsServerController {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), LocalDateTime.parse(end,
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), uris, unique), HttpStatus.OK);
     }
-
 }

@@ -31,7 +31,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -43,7 +46,15 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>logbook-spring-boot-starter</artifactId>
+            <version>2.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -61,10 +72,16 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ru.practicum</groupId>
+            <artifactId>statsClient</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -86,12 +103,11 @@
                             <manifest>
                                 <addClasspath>true</addClasspath>
                                 <classpathPrefix>lib/</classpathPrefix>
-                                <mainClass>ru.practicum.MainServer</mainClass>
+                                <mainClass>ru.practicum.MainService</mainClass>
                             </manifest>
                         </archive>
                     </configuration>
                 </plugin>
-
             </plugins>
 
         </pluginManagement>
