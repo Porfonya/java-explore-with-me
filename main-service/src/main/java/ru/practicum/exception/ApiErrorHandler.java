@@ -32,6 +32,17 @@ public class ApiErrorHandler {
         );
         return new ResponseEntity<>(response, badRequest);
     }
+    @ExceptionHandler()
+    public ResponseEntity<Object> handleCommentNotFoundExc(CommentNotFoundException e) {
+        HttpStatus badRequest = HttpStatus.NOT_FOUND;
+        ApiErrorResponse response = new ApiErrorResponse(
+                badRequest,
+                "The required object was not found.",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response, badRequest);
+    }
 
     @ExceptionHandler()
     public ResponseEntity<Object> handleRequestNotFoundExc(RequestNotFoundException e) {

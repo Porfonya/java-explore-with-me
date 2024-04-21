@@ -235,7 +235,7 @@ public class EventsServiceImpl implements EventsService {
     @Override
     public List<EventFullDto> getAllEventInformation(List<Long> users, List<String> states, List<Long> categories,
                                                      String rangeStart, String rangeEnd, int from, int size) {
-        validateEventStates(states);
+        checker.validateEventStates(states);
         List<Event> events = eventRepository.findEvents(users,
                 states, categories,
                 rangeStart != null ? LocalDateTime.parse(rangeStart, formatter) : null,
@@ -244,16 +244,6 @@ public class EventsServiceImpl implements EventsService {
         return mapper.mapToListEventsFullDto(events);
     }
 
-    private void validateEventStates(List<String> states) {
-        if (states != null) {
-            for (String state : states)
-                try {
-                    State.valueOf(state);
-                } catch (IllegalArgumentException e) {
-                    throw new ValidationExc("Wrong states!");
-                }
-        }
-    }
 
     @Override
     public List<EventShortDto> getAllEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
