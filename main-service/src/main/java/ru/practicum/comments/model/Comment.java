@@ -1,7 +1,6 @@
 package ru.practicum.comments.model;
 
 import lombok.*;
-import ru.practicum.enums.State;
 import ru.practicum.events.model.Event;
 import ru.practicum.users.model.User;
 
