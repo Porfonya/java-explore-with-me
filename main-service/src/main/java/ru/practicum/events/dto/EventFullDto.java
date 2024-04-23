@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.categories.dto.CategoryDto;
+import ru.practicum.enums.State;
 import ru.practicum.locations.dto.LocationDto;
 import ru.practicum.users.dto.UserShortDto;
 
@@ -24,7 +25,7 @@ public class EventFullDto {
     private Integer participantLimit;
     private String publishedOn;
     private Boolean requestModeration;
-    private String state;
+    private State state;
     private String title;
     private Long views;
 

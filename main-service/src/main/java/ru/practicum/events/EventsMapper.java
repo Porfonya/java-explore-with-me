@@ -3,6 +3,7 @@ package ru.practicum.events;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.categories.CategoriesMapper;
+import ru.practicum.enums.State;
 import ru.practicum.enums.Status;
 import ru.practicum.events.dto.EventFullDto;
 import ru.practicum.events.dto.EventShortDto;
@@ -57,7 +58,7 @@ public class EventsMapper {
                 .createdOn(event.getCreatedOn().format(formatter))
                 .publishedOn(event.getPublishedOn() != null ? event.getPublishedOn().format(formatter) : null)
                 .initiator(userMapper.mapToUserShortDto(event.getInitiator()))
-                .state(event.getState())
+                .state(State.valueOf(event.getState()))
                 .views(event.getViews())
                 .build();
     }

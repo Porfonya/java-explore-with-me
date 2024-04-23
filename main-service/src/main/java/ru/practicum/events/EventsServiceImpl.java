@@ -235,9 +235,8 @@ public class EventsServiceImpl implements EventsService {
     @Override
     public List<EventFullDto> getAllEventInformation(List<Long> users, List<String> states, List<Long> categories,
                                                      String rangeStart, String rangeEnd, int from, int size) {
-        checker.validateEventStates(states);
         List<Event> events = eventRepository.findEvents(users,
-                states, categories,
+                checker.validateEventStates(states), categories,
                 rangeStart != null ? LocalDateTime.parse(rangeStart, formatter) : null,
                 rangeEnd != null ? LocalDateTime.parse(rangeEnd, formatter) : null,
                 PageRequest.of(from / size, size));

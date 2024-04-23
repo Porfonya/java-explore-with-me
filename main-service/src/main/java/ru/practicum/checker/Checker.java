@@ -4,19 +4,18 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.categories.CategoriesRepository;
 import ru.practicum.categories.model.Category;
-import ru.practicum.comments.model.Comment;
 import ru.practicum.comments.CommentRepository;
+import ru.practicum.comments.model.Comment;
 import ru.practicum.compilations.Compilation;
 import ru.practicum.compilations.CompilationRepository;
-import ru.practicum.enums.State;
 import ru.practicum.events.EventRepository;
 import ru.practicum.events.model.Event;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.exception.ValidationExc;
 import ru.practicum.requests.RequestRepository;
 import ru.practicum.users.UserRepository;
 import ru.practicum.users.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -74,19 +73,18 @@ public class Checker {
         return compilationRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException(compId));
     }
+
     public Comment checkerCommentReturn(Long commId) {
-      return   commentRepository.findById(commId)
+        return commentRepository.findById(commId)
                 .orElseThrow(() -> new NotFoundException(commId));
     }
 
-    public void validateEventStates(List<String> states) {
-        if (states != null) {
-            for (String state : states)
-                try {
-                    State.valueOf(state);
-                } catch (IllegalArgumentException e) {
-                    throw new ValidationExc("Wrong states!");
-                }
+    public List<String> validateEventStates(List<String> states) {
+        List<String> result;
+        if (states != null) result = new ArrayList<>(states);
+        else {
+            result = null;
         }
+        return result;
     }
 }
